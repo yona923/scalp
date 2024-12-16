@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>두피 자가 진단 & 대머리 예측</title>
     <style>
-        /* 전반적인 스타일 설정 */
+        /* 전반적인 스타일(보라 테마 등) - 간단히 유지 */
         body {
             margin: 0; 
             padding: 0;
@@ -30,7 +30,6 @@
             margin: 1rem 0;
             text-align: center;
         }
-        /* 버튼 스타일 */
         .form-group {
             margin-bottom: 2rem;
             text-align: center;
@@ -50,11 +49,23 @@
             margin: 0.3rem;
             cursor: pointer;
             font-size: 1rem;
+            position: relative; /* 오버레이용 */
         }
         .button:hover {
             background-color: #6a44aa;
         }
-        /* 결과 영역 */
+        .button.selected {
+            background-color: #6a44aa;
+        }
+        /* 선택된 버튼 오버레이나 체크 마크 예시 */
+        .button.selected::after {
+            content: "✔";
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 1.2rem;
+            color: #fff;
+        }
         .result {
             margin-top: 1.5rem;
             padding: 1.5rem;
@@ -102,29 +113,29 @@
     <!-- 두피 자가 진단 테스트 -->
     <h2>두피 자가 진단 테스트</h2>
     <form id="diagnosisForm">
-        <div class="form-group">
+        <div class="form-group" data-question="scalpType">
             <label>두피 상태를 선택하세요:</label>
-            <button type="button" class="button" onclick="selectScalpType('기름지다')">기름지다</button>
-            <button type="button" class="button" onclick="selectScalpType('건조하다')">건조하다</button>
-            <button type="button" class="button" onclick="selectScalpType('가렵다')">가렵다</button>
-            <button type="button" class="button" onclick="selectScalpType('정상이다')">정상이다</button>
+            <button type="button" class="button" onclick="selectScalpType('기름지다', event)">기름지다</button>
+            <button type="button" class="button" onclick="selectScalpType('건조하다', event)">건조하다</button>
+            <button type="button" class="button" onclick="selectScalpType('가렵다', event)">가렵다</button>
+            <button type="button" class="button" onclick="selectScalpType('정상이다', event)">정상이다</button>
         </div>
-        <div class="form-group">
+        <div class="form-group" data-question="hairLoss">
             <label>탈모 진행 여부:</label>
-            <button type="button" class="button" onclick="selectHairLoss('머리카락이 자주 빠진다')">머리카락이 자주 빠진다</button>
-            <button type="button" class="button" onclick="selectHairLoss('머리카락이 가늘어진다')">머리카락이 가늘어진다</button>
-            <button type="button" class="button" onclick="selectHairLoss('아니다')">아니다</button>
+            <button type="button" class="button" onclick="selectHairLoss('머리카락이 자주 빠진다', event)">머리카락이 자주 빠진다</button>
+            <button type="button" class="button" onclick="selectHairLoss('머리카락이 가늘어진다', event)">머리카락이 가늘어진다</button>
+            <button type="button" class="button" onclick="selectHairLoss('아니다', event)">아니다</button>
         </div>
-        <div class="form-group">
+        <div class="form-group" data-question="habit">
             <label>생활 습관을 선택하세요:</label>
-            <button type="button" class="button" onclick="selectHabit('0.5L 미만')">물 섭취량: 0.5L 미만</button>
-            <button type="button" class="button" onclick="selectHabit('1L')">물 섭취량: 1L</button>
-            <button type="button" class="button" onclick="selectHabit('2L 이상')">물 섭취량: 2L 이상</button>
+            <button type="button" class="button" onclick="selectHabit('0.5L 미만', event)">물 섭취량: 0.5L 미만</button>
+            <button type="button" class="button" onclick="selectHabit('1L', event)">물 섭취량: 1L</button>
+            <button type="button" class="button" onclick="selectHabit('2L 이상', event)">물 섭취량: 2L 이상</button>
         </div>
-        <div class="form-group">
+        <div class="form-group" data-question="familyHistory">
             <label>가족력:</label>
-            <button type="button" class="button" onclick="selectFamily('있다')">부모님 중 한 분이라도 탈모가 있다</button>
-            <button type="button" class="button" onclick="selectFamily('없다')">없다</button>
+            <button type="button" class="button" onclick="selectFamily('있다', event)">부모님 중 한 분이라도 탈모가 있다</button>
+            <button type="button" class="button" onclick="selectFamily('없다', event)">없다</button>
         </div>
         <div class="form-group">
             <button type="button" class="button" style="width:100%;" onclick="diagnoseScalp()">진단하기</button>
@@ -166,21 +177,43 @@
     let familyHistory = "";
 
     /* -----------------------------
-       두피 자가 진단 기능
+       공통 헬퍼 함수: 버튼 선택 시 UI 표시
+       동일 질문 그룹 내 다른 버튼을 비활성화
      ----------------------------- */
-    function selectScalpType(type) {
-        scalpType = type;
-    }
-    function selectHairLoss(loss) {
-        hairLoss = loss;
-    }
-    function selectHabit(habitValue) {
-        habit = habitValue;
-    }
-    function selectFamily(family) {
-        familyHistory = family;
+    function handleButtonSelection(event) {
+        const btn = event.target;
+        const parentGroup = btn.closest(".form-group"); 
+        // 같은 그룹의 모든 버튼에서 .selected 제거
+        parentGroup.querySelectorAll(".button").forEach((button) => {
+            button.classList.remove("selected");
+        });
+        // 현재 클릭된 버튼만 .selected 추가
+        btn.classList.add("selected");
     }
 
+    /* -----------------------------
+       두피 자가 진단 선택 함수
+     ----------------------------- */
+    function selectScalpType(type, event) {
+        scalpType = type;
+        handleButtonSelection(event);
+    }
+    function selectHairLoss(loss, event) {
+        hairLoss = loss;
+        handleButtonSelection(event);
+    }
+    function selectHabit(habitValue, event) {
+        habit = habitValue;
+        handleButtonSelection(event);
+    }
+    function selectFamily(family, event) {
+        familyHistory = family;
+        handleButtonSelection(event);
+    }
+
+    /* -----------------------------
+       두피 자가 진단 결과
+     ----------------------------- */
     function diagnoseScalp() {
         if (!scalpType || !hairLoss || !habit || !familyHistory) {
             alert("모든 항목을 선택해주세요.");
