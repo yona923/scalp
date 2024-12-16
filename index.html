@@ -2,46 +2,56 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>두피 자가 진단 & 대머리 예측</title>
+    <title>두피 자가 진단 & 대머리 예측 + 문진표</title>
     <style>
-        /* 전반적인 스타일(보라 테마 등) - 간단히 유지 */
+        /* 
+           CMYK(C48, M100, Y0, K2)을 대략 RGB/HEX로 변환하면 #8200FA 정도가 됩니다.
+           디자인 톤에 맞춰 연한 배경, 짙은 배경 등도 적절히 변형했습니다.
+        */
+        :root {
+            --brand-color: #8200FA;  /* 메인 브랜드 컬러 */
+            --brand-color-dark: #6C00D2; /* hover나 진한 톤 */
+            --text-color: #4a148c;       /* 추가로 사용할 수 있는 짙은 보라 텍스트(원하는 경우) */
+            --bg-light: #f9f6fd;        /* 배경색(연보라 계열) */
+        }
+
         body {
             margin: 0; 
             padding: 0;
             font-family: Arial, sans-serif;
-            background-color: #f9f6fd; /* 연한 보라 배경 */
-            color: #4a148c; /* 짙은 보라 텍스트 */
+            background-color: var(--bg-light);
+            color: var(--brand-color); /* 브랜드 컬러로 텍스트 적용 */
         }
         header {
-            background-color: #7e57c2; /* 중간 톤 보라 */
+            background-color: var(--brand-color);
             color: #fff;
             text-align: center;
             padding: 1.5rem 0;
         }
         main {
-            max-width: 800px;
+            max-width: 900px;
             margin: 2rem auto;
             background: #fff;
             border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(126,87,194,0.2);
+            box-shadow: 0 4px 10px rgba(130,0,250,0.2);
             padding: 2rem;
         }
-        h1, h2 {
+        h1, h2, h3 {
             margin: 1rem 0;
             text-align: center;
         }
+        /* 공통 폼 그룹 스타일 */
         .form-group {
-            margin-bottom: 2rem;
-            text-align: center;
+            margin-bottom: 1.5rem;
         }
         .form-group label {
             display: block;
             font-weight: bold;
-            margin-bottom: 1rem;
-            color: #4a148c;
+            margin-bottom: 0.5rem;
+            color: var(--brand-color);
         }
         .button {
-            background-color: #7e57c2;
+            background-color: var(--brand-color);
             border: none;
             border-radius: 5px;
             color: #fff;
@@ -52,28 +62,27 @@
             position: relative; /* 오버레이용 */
         }
         .button:hover {
-            background-color: #6a44aa;
+            background-color: var(--brand-color-dark);
         }
+        /* 선택된 버튼 */
         .button.selected {
-            background-color: #6a44aa;
+            background-color: var(--brand-color-dark);
         }
-        /* 선택된 버튼 오버레이나 체크 마크 예시 */
         .button.selected::after {
             content: "✔";
             position: absolute;
             top: 5px;
-            right: 5px;
+            right: 8px;
             font-size: 1.2rem;
             color: #fff;
         }
         .result {
-            margin-top: 1.5rem;
+            margin-top: 1rem;
             padding: 1.5rem;
-            border-left: 5px solid #7e57c2;
+            border-left: 5px solid var(--brand-color);
             background-color: #f0e6fa;
             border-radius: 5px;
-            text-align: center;
-            white-space: pre-line; /* 줄바꿈 지원 */
+            white-space: pre-line;
         }
         .hidden {
             display: none;
@@ -82,7 +91,7 @@
             text-align: center;
             margin-top: 2rem;
             padding: 1rem 0;
-            background: #7e57c2;
+            background: var(--brand-color);
             color: #fff;
         }
         /* 로딩 애니메이션을 위한 프로그레스 바 */
@@ -98,19 +107,226 @@
         .loading-bar {
             width: 0;
             height: 100%;
-            background-color: #7e57c2;
+            background-color: var(--brand-color);
             transition: width 0.1s ease-in;
+        }
+        /* 문진표 스타일 */
+        .question-section {
+            margin-bottom: 2rem;
+            border: 1px solid #ddd;
+            border-left: 5px solid var(--brand-color);
+            padding: 1rem;
+            border-radius: 5px;
+        }
+        .question-section h3 {
+            text-align: left;
+            margin-top: 0;
+            color: var(--brand-color-dark);
+        }
+        .question-section .form-group {
+            margin-bottom: 1rem;
+        }
+        .question-section input[type="text"],
+        .question-section input[type="number"],
+        .question-section select, 
+        .question-section textarea {
+            width: 100%;
+            padding: 0.5rem;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin-bottom: 0.5rem;
+        }
+        .question-section .checkbox-group,
+        .question-section .radio-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .question-section label.inline {
+            display: inline-block;
+            margin-right: 1rem;
         }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>두피 자가 진단 & 대머리 예측</h1>
+    <h1>두피 자가 진단 & 대머리 예측 + 문진표</h1>
 </header>
 
 <main>
-    <!-- 두피 자가 진단 테스트 -->
+    <!-- 문진표 섹션 추가 -->
+    <section class="question-section">
+        <h3>1) 기본 정보 및 초기 평가</h3>
+        <div class="form-group">
+            <label>성명</label>
+            <input type="text" placeholder="홍길동" />
+        </div>
+        <div class="form-group">
+            <label>생년월일</label>
+            <input type="text" placeholder="YYYY-MM-DD" />
+        </div>
+        <div class="form-group">
+            <label>성별</label>
+            <label class="inline"><input type="radio" name="gender" /> 남성</label>
+            <label class="inline"><input type="radio" name="gender" /> 여성</label>
+        </div>
+        <div class="form-group">
+            <label>신장(cm) / 체중(kg)</label>
+            <div style="display:flex; gap:1rem;">
+                <input type="number" placeholder="신장" />
+                <input type="number" placeholder="체중" />
+            </div>
+        </div>
+        <!-- 두피 상태 질문 -->
+        <div class="form-group">
+            <label>두피 상태를 가장 잘 묘사한 항목을 선택해주세요:</label>
+            <select>
+                <option value="">선택하세요</option>
+                <option>A) 비듬 또는 가려움증 동반</option>
+                <option>B) 건조하거나 민감함</option>
+                <option>C) 기름지거나 번들거림</option>
+                <option>D) 특별한 이상 없음</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>탈모 부위와 범위를 체크해주세요 (복수 선택 가능)</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" /> 정수리</label>
+                <label><input type="checkbox" /> M자형 이마</label>
+                <label><input type="checkbox" /> 전반적 감소</label>
+                <label><input type="checkbox" /> 특정 부위 국소적 탈모</label>
+            </div>
+        </div>
+    </section>
+
+    <section class="question-section">
+        <h3>2) 의학적 히스토리 및 유전적 요인</h3>
+        <div class="form-group">
+            <label>가족력: 직계 가족 중 탈모를 경험한 분이 있나요?</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" /> 아버지</label>
+                <label><input type="checkbox" /> 어머니</label>
+                <label><input type="checkbox" /> 조부모</label>
+                <label><input type="checkbox" /> 형제자매</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>현재 진단받았거나 과거에 앓았던 질병</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" /> 갑상선 질환</label>
+                <label><input type="checkbox" /> 빈혈</label>
+                <label><input type="checkbox" /> 자가면역 질환(루푸스, 건선 등)</label>
+                <label><input type="checkbox" /> 정신질환(우울증, 불안증)</label>
+            </div>
+            <input type="text" placeholder="기타 (직접 입력)" />
+        </div>
+        <div class="form-group">
+            <label>정기적으로 복용 중인 약물이 있습니까? (특히 항고혈압제, 항우울제 등)</label>
+            <input type="text" placeholder="약물명 또는 해당 내용" />
+        </div>
+        <div class="form-group">
+            <label>최근 6개월 내 체중의 급격한 변화가 있었나요? (예/아니오)</label>
+            <select>
+                <option value="">선택</option>
+                <option value="yes">예</option>
+                <option value="no">아니오</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>호르몬 문제(월경 이상, 다낭성 난소증후군 등)를 진단받은 적이 있나요? (여성)</label>
+            <select>
+                <option value="">선택</option>
+                <option value="yes">예</option>
+                <option value="no">아니오</option>
+            </select>
+        </div>
+    </section>
+
+    <section class="question-section">
+        <h3>3) 스트레스 및 심리적 요인 분석</h3>
+        <div class="form-group">
+            <label>현재 스트레스 수준 (1 ~ 10)</label>
+            <input type="number" min="1" max="10" placeholder="1 ~ 10" />
+        </div>
+        <div class="form-group">
+            <label>최근 6개월 내 주요 사건 (복수 선택 가능)</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" /> 직장 변화</label>
+                <label><input type="checkbox" /> 가족 건강 문제</label>
+                <label><input type="checkbox" /> 재정적 문제</label>
+            </div>
+            <input type="text" placeholder="기타 (직접 입력)" />
+        </div>
+    </section>
+
+    <section class="question-section">
+        <h3>4) 환경 및 생활습관 요인</h3>
+        <div class="form-group">
+            <label>사용하는 샴푸 및 헤어 제품</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" /> 일반 샴푸</label>
+                <label><input type="checkbox" /> 약산성 샴푸</label>
+                <label><input type="checkbox" /> 비듬용 샴푸</label>
+            </div>
+            <input type="text" placeholder="기타 (직접 입력)" />
+        </div>
+        <div class="form-group">
+            <label>샴푸 빈도</label>
+            <select>
+                <option value="">선택</option>
+                <option value="1day">하루 1회</option>
+                <option value="2day">2~3일에 1회</option>
+                <option value="week">주 1회 이하</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>환경적 요인</label>
+            <label><input type="radio" name="envExposed" /> 자외선, 먼지 등 유해물질 노출 많음</label>
+            <label><input type="radio" name="envExposed" /> 그렇지 않음</label>
+        </div>
+        <div class="form-group">
+            <label>하루 평균 실내에서 보내는 시간</label>
+            <input type="number" placeholder="예: 8 (시간)" />
+        </div>
+        <div class="form-group">
+            <label>음주 및 흡연 빈도</label>
+            <input type="text" placeholder="음주: 주 몇 회 / 흡연: 하루 몇 개비" />
+        </div>
+    </section>
+
+    <section class="question-section">
+        <h3>5) 탈모 진행 및 치료 경험</h3>
+        <div class="form-group">
+            <label>탈모 진행 단계(자가 평가), 증상 (복수 선택 가능)</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" /> 머리카락 가늘어짐</label>
+                <label><input type="checkbox" /> 머리카락 빠짐 증가</label>
+                <label><input type="checkbox" /> 두피 노출 증가</label>
+            </div>
+            <input type="text" placeholder="기타 (직접 입력)" />
+        </div>
+        <div class="form-group">
+            <label>기존 치료 경험 (예/아니오)</label>
+            <select>
+                <option value="">선택</option>
+                <option value="yes">예</option>
+                <option value="no">아니오</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>받은 치료</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" /> 약물 치료 (피나스테리드/두타스테리드)</label>
+                <label><input type="checkbox" /> 주사 요법</label>
+                <label><input type="checkbox" /> 메조테라피</label>
+            </div>
+            <input type="text" placeholder="기타 (직접 입력)" />
+        </div>
+    </section>
+
+    <!-- 두피 자가 진단 테스트 (기존) -->
     <h2>두피 자가 진단 테스트</h2>
     <form id="diagnosisForm">
         <div class="form-group" data-question="scalpType">
@@ -169,31 +385,22 @@
 
 <script>
     /* -----------------------------
-       상태 저장용 변수
+       두피 자가 진단 및 버튼 선택 반응
      ----------------------------- */
     let scalpType = "";
     let hairLoss = "";
     let habit = "";
     let familyHistory = "";
 
-    /* -----------------------------
-       공통 헬퍼 함수: 버튼 선택 시 UI 표시
-       동일 질문 그룹 내 다른 버튼을 비활성화
-     ----------------------------- */
     function handleButtonSelection(event) {
         const btn = event.target;
-        const parentGroup = btn.closest(".form-group"); 
-        // 같은 그룹의 모든 버튼에서 .selected 제거
+        const parentGroup = btn.closest(".form-group");
         parentGroup.querySelectorAll(".button").forEach((button) => {
             button.classList.remove("selected");
         });
-        // 현재 클릭된 버튼만 .selected 추가
         btn.classList.add("selected");
     }
 
-    /* -----------------------------
-       두피 자가 진단 선택 함수
-     ----------------------------- */
     function selectScalpType(type, event) {
         scalpType = type;
         handleButtonSelection(event);
@@ -211,29 +418,29 @@
         handleButtonSelection(event);
     }
 
-    /* -----------------------------
-       두피 자가 진단 결과
-     ----------------------------- */
     function diagnoseScalp() {
         if (!scalpType || !hairLoss || !habit || !familyHistory) {
             alert("모든 항목을 선택해주세요.");
             return;
         }
-
         const scalpResults = {
             "기름지다": "기름진 두피! 두피 클렌징에 신경쓰세요.",
             "건조하다": "건조한 두피! 수분 보충이 필요합니다.",
             "가렵다": "가려운 두피! 각질 관리와 진정 케어가 좋습니다.",
             "정상이다": "건강한 두피! 지금 상태를 잘 유지하세요."
         };
-
         const resultDiv = document.getElementById("diagnosisResult");
         resultDiv.classList.remove("hidden");
-        resultDiv.innerText = `■ 두피 상태: ${scalpResults[scalpType]}\n■ 탈모 진행 여부: ${hairLoss}\n■ 물 섭취량: ${habit}\n■ 가족력: ${familyHistory}\n\n(결과를 토대로 꾸준한 두피 관리를 추천합니다.)`;
+        resultDiv.innerText = `■ 두피 상태: ${scalpResults[scalpType]}
+■ 탈모 진행 여부: ${hairLoss}
+■ 물 섭취량: ${habit}
+■ 가족력: ${familyHistory}
+
+(결과를 토대로 꾸준한 두피 관리를 추천합니다.)`;
     }
 
     /* -----------------------------
-       대머리 예측 기능
+       대머리 예측 기능 (로딩바)
      ----------------------------- */
     function predictBaldness() {
         const fileInput = document.getElementById("scalpPhoto");
@@ -258,7 +465,7 @@
         // 가짜 진단 시뮬레이션: 로딩바를 2초 동안 채우고 결과 보여주기
         let progress = 0;
         const interval = setInterval(() => {
-            progress += 5; // 증가폭 조절 가능
+            progress += 5;
             loadingBar.style.width = progress + "%";
 
             if (progress >= 100) {
@@ -275,7 +482,7 @@
                 ];
                 baldnessResultDiv.innerText = messages[randomChance % 3];
             }
-        }, 100); // 0.1초마다 로딩바 업데이트
+        }, 100);
     }
 </script>
 
