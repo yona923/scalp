@@ -152,7 +152,7 @@
 <body>
 
 <header>
-    <h1>두피 자가 진단 & 대머리 예측 + 문진표</h1>
+    <h1>두피 자가 진단 + 문진표</h1>
 </header>
 
 <main>
@@ -359,132 +359,7 @@
     </form>
     <div id="diagnosisResult" class="result hidden"></div>
 
-    <!-- 대머리 예측 머신 -->
-    <h2>대머리 예측 머신</h2>
-    <div class="form-group">
-        <label>두피 사진을 업로드하세요:</label>
-        <input type="file" id="scalpPhoto" accept="image/*" />
-    </div>
-    <div class="form-group">
-        <button type="button" class="button" onclick="predictBaldness()">대머리 가능성 예측</button>
-    </div>
-    
-    <!-- 로딩바 & 결과 섹션 -->
-    <div id="loadingSection" class="hidden">
-        <div class="loading-container">
-            <div id="loadingBar" class="loading-bar"></div>
-        </div>
-        <p style="text-align:center;">진단 중입니다... 잠시만 기다려주세요.</p>
-    </div>
-    <div id="baldnessResult" class="result hidden"></div>
-</main>
-
-<footer>
-    &copy; 2024 두피 관리 도구. 모든 권리 보유.
-</footer>
-
-<script>
-    /* -----------------------------
-       두피 자가 진단 및 버튼 선택 반응
-     ----------------------------- */
-    let scalpType = "";
-    let hairLoss = "";
-    let habit = "";
-    let familyHistory = "";
-
-    function handleButtonSelection(event) {
-        const btn = event.target;
-        const parentGroup = btn.closest(".form-group");
-        parentGroup.querySelectorAll(".button").forEach((button) => {
-            button.classList.remove("selected");
-        });
-        btn.classList.add("selected");
-    }
-
-    function selectScalpType(type, event) {
-        scalpType = type;
-        handleButtonSelection(event);
-    }
-    function selectHairLoss(loss, event) {
-        hairLoss = loss;
-        handleButtonSelection(event);
-    }
-    function selectHabit(habitValue, event) {
-        habit = habitValue;
-        handleButtonSelection(event);
-    }
-    function selectFamily(family, event) {
-        familyHistory = family;
-        handleButtonSelection(event);
-    }
-
-    function diagnoseScalp() {
-        if (!scalpType || !hairLoss || !habit || !familyHistory) {
-            alert("모든 항목을 선택해주세요.");
-            return;
-        }
-        const scalpResults = {
-            "기름지다": "기름진 두피! 두피 클렌징에 신경쓰세요.",
-            "건조하다": "건조한 두피! 수분 보충이 필요합니다.",
-            "가렵다": "가려운 두피! 각질 관리와 진정 케어가 좋습니다.",
-            "정상이다": "건강한 두피! 지금 상태를 잘 유지하세요."
-        };
-        const resultDiv = document.getElementById("diagnosisResult");
-        resultDiv.classList.remove("hidden");
-        resultDiv.innerText = `■ 두피 상태: ${scalpResults[scalpType]}
-■ 탈모 진행 여부: ${hairLoss}
-■ 물 섭취량: ${habit}
-■ 가족력: ${familyHistory}
-
-(결과를 토대로 꾸준한 두피 관리를 추천합니다.)`;
-    }
-
-    /* -----------------------------
-       대머리 예측 기능 (로딩바)
-     ----------------------------- */
-    function predictBaldness() {
-        const fileInput = document.getElementById("scalpPhoto");
-        const fileList = fileInput.files;
-        const baldnessResultDiv = document.getElementById("baldnessResult");
-        const loadingSection = document.getElementById("loadingSection");
-        const loadingBar = document.getElementById("loadingBar");
-
-        // 초기화
-        baldnessResultDiv.classList.add("hidden");
-        loadingSection.classList.add("hidden");
-        loadingBar.style.width = "0";
-
-        if (!fileList || fileList.length === 0) {
-            alert("두피 사진을 첨부해주세요.");
-            return;
-        }
-
-        // 로딩 섹션 노출
-        loadingSection.classList.remove("hidden");
-
-        // 가짜 진단 시뮬레이션: 로딩바를 2초 동안 채우고 결과 보여주기
-        let progress = 0;
-        const interval = setInterval(() => {
-            progress += 5;
-            loadingBar.style.width = progress + "%";
-
-            if (progress >= 100) {
-                clearInterval(interval);
-                // 로딩 끝나면 결과 표시
-                loadingSection.classList.add("hidden");
-                baldnessResultDiv.classList.remove("hidden");
-
-                const randomChance = Math.floor(Math.random() * 100);
-                const messages = [
-                    `10년 후에도 풍성할 예정! 🦁 (가능성: ${randomChance}%)`,
-                    `5년 후 모자가 필요할 수 있습니다! 🧢 (가능성: ${randomChance}%)`,
-                    `이미 탈모가 진행 중일 수 있습니다! 🛑 (가능성: ${randomChance}%)`
-                ];
-                baldnessResultDiv.innerText = messages[randomChance % 3];
-            }
-        }, 100);
-    }
-</script>
+  
 
 </body>
 </html>
