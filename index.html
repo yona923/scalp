@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>두피 진단 테스트</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f4;
+            color: #333;
+        }
+
+        header {
+            background: #4CAF50;
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+        }
+
+        main {
+            max-width: 600px;
+            margin: 2rem auto;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        select, button {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        button {
+            background: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        .result {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: #e0f7fa;
+            border-left: 4px solid #00796b;
+            border-radius: 5px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem 0;
+            background: #333;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            main {
+                margin: 1rem;
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            button {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>두피 진단 테스트</h1>
+    </header>
+    <main>
+        <h1>당신의 두피 상태를 확인하세요</h1>
+        <form id="diagnosisForm">
+            <div class="form-group">
+                <label for="scalpType">두피 상태</label>
+                <select id="scalpType" required>
+                    <option value="">선택하세요</option>
+                    <option value="건조">건조</option>
+                    <option value="지성">지성</option>
+                    <option value="정상">정상</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="stressLevel">스트레스 지수</label>
+                <select id="stressLevel" required>
+                    <option value="">선택하세요</option>
+                    <option value="낮음">낮음</option>
+                    <option value="보통">보통</option>
+                    <option value="높음">높음</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="hairFall">하루에 빠지는 머리카락 수</label>
+                <select id="hairFall" required>
+                    <option value="">선택하세요</option>
+                    <option value="50 이하">50개 이하</option>
+                    <option value="50-100">50-100개</option>
+                    <option value="100 이상">100개 이상</option>
+                </select>
+            </div>
+            <button type="button" onclick="diagnoseScalp()">진단하기</button>
+        </form>
+        <div id="result" class="result" style="display:none;"></div>
+    </main>
+    <footer>
+        &copy; 2024 두피 관리. 모든 권리 보유.
+    </footer>
+
+    <script>
+        function diagnoseScalp() {
+            const scalpType = document.getElementById("scalpType").value;
+            const stressLevel = document.getElementById("stressLevel").value;
+            const hairFall = document.getElementById("hairFall").value;
+
+            if (!scalpType || !stressLevel || !hairFall) {
+                alert("모든 항목을 선택해주세요.");
+                return;
+            }
+
+            let resultText = "";
+
+            if (scalpType === "건조" && hairFall === "100 이상") {
+                resultText = "심각한 두피 상태입니다. 전문 관리를 받는 것을 추천합니다!";
+            } else if (scalpType === "지성" && stressLevel === "높음") {
+                resultText = "지성 두피와 스트레스가 높은 상태입니다. 샴푸 선택에 신경 쓰세요.";
+            } else if (scalpType === "정상" && stressLevel === "낮음") {
+                resultText = "당신의 두피 상태는 건강합니다. 지금처럼만 유지하세요!";
+            } else {
+                resultText = "두피 상태가 중간 수준입니다. 적절한 관리가 필요합니다.";
+            }
+
+            const resultDiv = document.getElementById("result");
+            resultDiv.innerText = resultText;
+            resultDiv.style.display = "block";
+        }
+    </script>
+</body>
+</html>
