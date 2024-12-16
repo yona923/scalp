@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>두피 진단 테스트</title>
+    <title>두피 진단 테스트와 재미있는 도구들</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -16,58 +16,57 @@
         header {
             background: #4CAF50;
             color: white;
-            padding: 1rem 0;
+            padding: 1.5rem 0;
             text-align: center;
         }
 
         main {
-            max-width: 600px;
+            max-width: 800px;
             margin: 2rem auto;
             background: white;
-            padding: 1.5rem;
+            padding: 2rem;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        h1 {
+        h1, h2 {
             color: #333;
             text-align: center;
         }
 
         .form-group {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
             margin-bottom: 1rem;
         }
 
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-        }
-
-        select, button {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ccc;
+        .form-group button {
+            padding: 1rem 2rem;
+            margin: 0.5rem;
+            border: none;
             border-radius: 5px;
             font-size: 1rem;
-        }
-
-        button {
+            cursor: pointer;
             background: #4CAF50;
             color: white;
-            cursor: pointer;
         }
 
-        button:hover {
+        .form-group button:hover {
             background: #45a049;
         }
 
         .result {
             margin-top: 2rem;
-            padding: 1rem;
+            padding: 1.5rem;
             background: #e0f7fa;
             border-left: 4px solid #00796b;
             border-radius: 5px;
+            text-align: center;
         }
 
         footer {
@@ -76,6 +75,10 @@
             padding: 1rem 0;
             background: #333;
             color: white;
+        }
+
+        .hidden {
+            display: none;
         }
 
         @media (max-width: 768px) {
@@ -88,7 +91,7 @@
                 font-size: 1.5rem;
             }
 
-            button {
+            .form-group button {
                 font-size: 0.9rem;
             }
         }
@@ -96,72 +99,127 @@
 </head>
 <body>
     <header>
-        <h1>두피 진단 테스트</h1>
+        <h1>두피 관리 도구 모음</h1>
     </header>
     <main>
-        <h1>당신의 두피 상태를 확인하세요</h1>
+        <h2>1. 두피 자가 진단 테스트</h2>
         <form id="diagnosisForm">
             <div class="form-group">
-                <label for="scalpType">두피 상태</label>
-                <select id="scalpType" required>
-                    <option value="">선택하세요</option>
-                    <option value="건조">건조</option>
-                    <option value="지성">지성</option>
-                    <option value="정상">정상</option>
-                </select>
+                <label>두피 상태를 선택하세요:</label>
+                <button type="button" onclick="selectScalpType('기름지다')">기름지다</button>
+                <button type="button" onclick="selectScalpType('건조하다')">건조하다</button>
+                <button type="button" onclick="selectScalpType('가렵다')">가렵다</button>
+                <button type="button" onclick="selectScalpType('정상이다')">정상이다</button>
             </div>
             <div class="form-group">
-                <label for="stressLevel">스트레스 지수</label>
-                <select id="stressLevel" required>
-                    <option value="">선택하세요</option>
-                    <option value="낮음">낮음</option>
-                    <option value="보통">보통</option>
-                    <option value="높음">높음</option>
-                </select>
+                <label>탈모 진행 여부:</label>
+                <button type="button" onclick="selectHairLoss('머리카락이 자주 빠진다')">머리카락이 자주 빠진다</button>
+                <button type="button" onclick="selectHairLoss('머리카락이 가늘어진다')">머리카락이 가늘어진다</button>
+                <button type="button" onclick="selectHairLoss('아니다')">아니다</button>
             </div>
             <div class="form-group">
-                <label for="hairFall">하루에 빠지는 머리카락 수</label>
-                <select id="hairFall" required>
-                    <option value="">선택하세요</option>
-                    <option value="50 이하">50개 이하</option>
-                    <option value="50-100">50-100개</option>
-                    <option value="100 이상">100개 이상</option>
-                </select>
+                <label>생활 습관을 선택하세요:</label>
+                <button type="button" onclick="selectHabit('0.5L 미만')">물 섭취량: 0.5L 미만</button>
+                <button type="button" onclick="selectHabit('1L')">물 섭취량: 1L</button>
+                <button type="button" onclick="selectHabit('2L 이상')">물 섭취량: 2L 이상</button>
             </div>
-            <button type="button" onclick="diagnoseScalp()">진단하기</button>
+            <div class="form-group">
+                <label>가족력:</label>
+                <button type="button" onclick="selectFamily('있다')">부모님 중 한 분이라도 탈모가 있다</button>
+                <button type="button" onclick="selectFamily('없다')">없다</button>
+            </div>
+            <button type="button" style="width:100%;padding:1rem;" onclick="diagnoseScalp()">진단하기</button>
         </form>
-        <div id="result" class="result" style="display:none;"></div>
+        <div id="result" class="result hidden"></div>
+
+        <h2>2. 대머리 예측 머신</h2>
+        <div class="form-group">
+            <label>두피 사진을 업로드하세요:</label>
+            <input type="file" id="scalpPhoto" accept="image/*" />
+            <button type="button" onclick="predictBaldness()">대머리 가능성 예측</button>
+        </div>
+        <div id="baldnessResult" class="result hidden"></div>
+
+        <h2>3. 두피 관리 캐릭터 매칭 테스트</h2>
+        <button type="button" onclick="matchCharacter()">캐릭터 매칭 시작</button>
+        <div id="characterResult" class="result hidden"></div>
+
+        <h2>4. 두피 운세</h2>
+        <button type="button" onclick="showScalpFortune()">오늘의 두피 운세 보기</button>
+        <div id="fortuneResult" class="result hidden"></div>
     </main>
     <footer>
-        &copy; 2024 두피 관리. 모든 권리 보유.
+        &copy; 2024 두피 관리 도구. 모든 권리 보유.
     </footer>
 
     <script>
-        function diagnoseScalp() {
-            const scalpType = document.getElementById("scalpType").value;
-            const stressLevel = document.getElementById("stressLevel").value;
-            const hairFall = document.getElementById("hairFall").value;
+        let scalpType = "";
+        let hairLoss = "";
+        let habit = "";
+        let familyHistory = "";
 
-            if (!scalpType || !stressLevel || !hairFall) {
+        function selectScalpType(type) {
+            scalpType = type;
+        }
+
+        function selectHairLoss(loss) {
+            hairLoss = loss;
+        }
+
+        function selectHabit(habitValue) {
+            habit = habitValue;
+        }
+
+        function selectFamily(family) {
+            familyHistory = family;
+        }
+
+        function diagnoseScalp() {
+            if (!scalpType || !hairLoss || !habit || !familyHistory) {
                 alert("모든 항목을 선택해주세요.");
                 return;
             }
+            const results = {
+                "기름지다": "기름진 두피 왕! 😄 두피 클렌징이 필요합니다.",
+                "건조하다": "건조한 두피! 😢 수분 공급이 필요합니다.",
+                "가렵다": "가려운 두피 케어를 시작하세요! 🛠️",
+                "정상이다": "건강한 두피의 주인공! 🎉 지금처럼 유지하세요."
+            };
+            document.getElementById("result").innerText = results[scalpType];
+        }
 
-            let resultText = "";
+        function predictBaldness() {
+            const randomChance = Math.floor(Math.random() * 100);
+            const messages = [
+                `10년 후에도 풍성할 예정! 🦁 (가능성: ${randomChance}%)`,
+                `5년 후에는 모자 구매를 추천합니다! 🧢 (가능성: ${randomChance}%)`,
+                `이미 탈모가 시작되었습니다! 🛑 (가능성: ${randomChance}%)`
+            ];
+            document.getElementById("baldnessResult").innerText = messages[randomChance % 3];
+        }
 
-            if (scalpType === "건조" && hairFall === "100 이상") {
-                resultText = "심각한 두피 상태입니다. 전문 관리를 받는 것을 추천합니다!";
-            } else if (scalpType === "지성" && stressLevel === "높음") {
-                resultText = "지성 두피와 스트레스가 높은 상태입니다. 샴푸 선택에 신경 쓰세요.";
-            } else if (scalpType === "정상" && stressLevel === "낮음") {
-                resultText = "당신의 두피 상태는 건강합니다. 지금처럼만 유지하세요!";
-            } else {
-                resultText = "두피 상태가 중간 수준입니다. 적절한 관리가 필요합니다.";
-            }
+        function matchCharacter() {
+            const characters = [
+                "풍성이: 건강한 두피! 💪",
+                "탈모왕: 지금 당장 관리가 필요합니다! 👑",
+                "기름진 대왕: 두피 클렌징 필수! 🛁",
+                "가뭄이: 수분 케어가 시급합니다! 💧"
+                            ];
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            document.getElementById("characterResult").innerText = characters[randomIndex];
+            document.getElementById("characterResult").classList.remove("hidden");
+        }
 
-            const resultDiv = document.getElementById("result");
-            resultDiv.innerText = resultText;
-            resultDiv.style.display = "block";
+        function showScalpFortune() {
+            const fortunes = [
+                "오늘은 두피 마사지가 필요한 날입니다! 💆‍♂️",
+                "행운의 숫자: 5 (5분 동안 샴푸 마사지).",
+                "두피가 빛날 운명입니다! 🌟",
+                "피지 컨트롤에 신경 쓰세요! 🛁"
+            ];
+            const randomIndex = Math.floor(Math.random() * fortunes.length);
+            document.getElementById("fortuneResult").innerText = fortunes[randomIndex];
+            document.getElementById("fortuneResult").classList.remove("hidden");
         }
     </script>
 </body>
